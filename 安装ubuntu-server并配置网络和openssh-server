@@ -1,0 +1,7 @@
+1.下载ubuntu-server镜像，使用vmware安装镜像。配置服务器名，用户名，密码。进入终端界面。
+2.在vmware网络配置中配置配置网络，使用NTA模式，共享主机ip。(编辑--》虚拟网络编辑器--》仅主机模式--》勾选两个选项框，保存更改并应用)
+3.sudo apt-get install openssh-server 
+  ssh -V 查看版本
+  /etc/init.d/ssh status 查看状态
+  /etc/init.d/ssh restart 重启
+  

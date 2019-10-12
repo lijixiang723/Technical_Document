@@ -1,0 +1,13 @@
+从docker拉去mysql镜像之后，投入正常的生产使用，需要完成以下几部。
+
+1.docker pull mysql 拉取镜像之后运行一个容器，映射容器端口到宿主机供外部进行mysql使用。
+
+2.docker run -p 3343:3306 --name mysql_server -e MYSQL_ROOT_PASSWORD=123456abc -d mysql 运行一个容器将自定义的3343端口(保证没有被占用)，映射到宿主机上，即登录mysql服务使用的port，-e表示设置初始密码。
+
+3.docker exec -it mysql_server /bin/bash 可进入创建的容器进行数据库查看。如需要设置权限任何远程主机都可以访问，则： grant all privileges on *.* to 'root'@'%';   flush privileges;
+
+注：docker主从配置等技术文档参考： 
+上篇：https://blog.csdn.net/weixin_42337937/article/details/88881584
+下篇：https://blog.csdn.net/weixin_42337937/article/details/88903707
+
+

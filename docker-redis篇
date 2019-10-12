@@ -1,0 +1,10 @@
+拉取redis镜像
+docker pull redis
+
+运行一个redis容器
+docker run -p 6380:6379 --name redis_server -d redis --requirepass "1997723ljx"
+
+进入容器内部查看
+docker exec -it redis_server redis-cli
+
+设置认证 auth “password”

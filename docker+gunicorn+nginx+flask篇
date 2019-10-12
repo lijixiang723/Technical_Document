@@ -1,0 +1,91 @@
+一：使用常规部署。
+安装flask和gunicorn
+遇到的问题，运行gunicorn的时候，出现flask导包错误，原因是ubuntu默认使用的python2编译，而pip3安装在python3的环境里面，python2找不到，因此报错。同时要保证flask和gunicorn在同一个python环境里面。
+解决办法：
+首先查看系统有多少python版本  ls /usr/bin/python*
+查看当前使用版本  python --version
+删除原来的 python版本 sudo rm /usr/bin/python
+建立新的链接 sudo ln -s /usr/bin/python3 /usr/bin/python
+添加环境变量 sudo PATH=/usr/bin:$PATH
+
+
+
+编写flask.py 通过gunicorn运行。
+gunicorn -w 4 -b 0.0.0.0:8001 flask:app
+优雅的重启：首先查看端口号 pstree -ap|grep gunicorn 显示主进程号
+kill -HUP 主进程号
+
+
+安装nginx
+添加nginx配置：
+修改nginx.conf
+server {
+                listen 80;
+                server_name 49.234.101.59;
+
+                location / {
+                        proxy_pass http://0.0.0.0:8009;
+                        proxy_redirect          off;
+                        proxy_set_header        Host                    $http_host;
+                        proxy_set_header        X-Real-IP               $remote_addr;
+                        proxy_set_header        X-Forwarded-For         		  
+			$proxy_add_x_forwarded_for;
+                        proxy_set_header        X-Forwared-Proto        $scheme;
+
+        }
+
+        }
+重启nginx服务 访问 域名:80即可访问flask应用。
+
+
+
+二：使用docker部署。
+docekr安装 
+
+sudo apt-get update
+sudo apt-get install docker.io
+
+设置docker免sudo
+
+sudo addgroup --system docker
+sudo adduser $USER docker
+newgrp docker
+
+注：在非docker环境下nginx监听默认80端口，gunicorn绑定8009端口  外网访问49.234.101.59:80 访问的是非docker部署的flask应用。
+
+在完成docker部署的先决工作之后，接下来开始进行docker部署flask+gunicorn+nginx
+在/home 目录下建立一个子目录 flask_test. 并在子目录下创建一系列文件
+manage.py gunicoorn.conf Dockerfile requirements.txt
+
+分别编写以上文件内容。manage.py为flask程序，gunicorn.conf为gunicorn的配置文件，Dockerfile构建镜像文件，requirements.txt为项目依赖文件list。
+
+使用docker build -t python_falsk . 命令打包一个镜像
+运行该镜像 docker run -p 8008:7890 --name flask_demo -d flask_test
+验证是否成功 curl 0.0.0.0:8008 
+以上通过gunicorn+flask在docker容器中运行成功，接下来创建另一个镜像运行nginx与gunicorn联动。
+
+接下来添加docker部署的nginx配置文件
+sudo vi /etc/nginx/nginx.conf
+server {
+                listen 9000;
+                server_name 49.234.101.59;
+
+                location / {
+                        proxy_pass http://0.0.0.0:8008;
+                        proxy_redirect          off;
+                        proxy_set_header        Host                    $http_host;
+                        proxy_set_header        X-Real-IP               $remote_addr;
+                        proxy_set_header        X-Forwarded-For         		  
+			$proxy_add_x_forwarded_for;
+                        proxy_set_header        X-Forwared-Proto        $scheme;
+
+        }
+
+        }
+
+保存并退出 
+重启nginx服务
+验证是否成功 curl 49.234.101.59:8080
+则flask+gunicorn+nginx使用docker部署成功
+
+

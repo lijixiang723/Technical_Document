@@ -1,0 +1,14 @@
+通过Docker搭建一个属于自己或者团队使用的api开发文档应用：showdoc
+
+1. 通过git clone源代码：git clone https://github.com/star7th/showdoc.git
+
+2. 通过源代码中的Dockerfile创建showdoc镜像：docker build -t showdoc_server .
+
+3. 通过镜像 showdoc_server 运行一个容器并做容器端口和宿主机nginx端口映射： docker run -p 4449:80 --name show_doc -d showdoc_server;
+
+4.可以对showdoc容器数据进行保护(挂载):
+showdoc容器中的/var/www/html/Sqlite/showdoc.db.php非常重要，数据都保存在该文件中，如果误删该文件就没法恢复数据了
+为了安全起见，将/var/www/html/Sqlite/showdoc.db.php放在容器外，启动容器时挂载该文件即可。另外，在showdoc/Sqlite/下就存在showdoc.db.php文件
+我们可以进行如下操作：docker run -d -v /root/showdoc/Sqlite/:/var/www/html/Sqlite --name showdoc -p 4999:80 showdoc
+
+注：参考文档地址: http://www.showdoc.cc/help?page_id=65610
