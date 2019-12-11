@@ -1,0 +1,76 @@
+仅使用压缩解压缩进行文件处理:
+一：Zip格式
+注：压缩文件时原文件还存在，且可以压缩文件夹
+
+压缩：zip -r filename.zip filename
+解压缩：解压到当前文件目录 unzip filename.zip
+        解压到指定文件目录 unzip filename.zip -d /home/Desktop/...
+
+二：gzip格式
+注：压缩文件时原文件不存在了，且gzip只能压缩文件不能压缩文件夹(压缩文件夹须先tar打包文件夹)
+
+-c：将压缩的数据输出到屏幕上，可透过数据流重导向来处理
+-d：解压缩的参数
+-t：可以用来检验一个压缩文件的一致性，看看文件有没有错误
+-v：可以显示出原文件/压缩文件的压缩比等信息
+-#：#是数字的意思，代表压缩等级，-1最快，但是压缩比最差，-9最慢，但是压缩比最好，预设是-6
+
+压缩：gzip filename 或者 gzip -v filename
+解压缩：gzip -d filename.gz
+
+三：bzip2格式
+
+-c  ：將壓縮的過程產生的資料輸出到螢幕上！
+-d  ：解壓縮的參數
+-k  ：保留原始檔案，而不會刪除原始的檔案喔！
+-z  ：壓縮的參數 (預設值，可以不加)
+-v  ：可以顯示出原檔案/壓縮檔案的壓縮比等資訊；
+-#  ：與 gzip 同樣的，都是在計算壓縮比的參數， -9 最佳， -1 最快！
+
+压缩：bzip2 filename 或者 bzip2 -v filename 或者 bzip2 -k filename(-k表示保留原文件)
+解压缩：bzip2 -d filename.bz2
+
+四：xz格式
+
+-c：将压缩的数据输出到屏幕上，可透过数据流重导向来处理
+-d：解压缩的参数
+-k：保留原文件，而不会删除原始文件
+-t：测试压缩文件的完整性，看有没有错误
+-l：累出压缩文件的相关信息
+-#：#是数字的意思，代表压缩等级，-1最快，但是压缩比最差，-9最慢，但是压缩比最好，预设是-6
+
+压缩：xz filename 或者 xz -v filename 或者 xz -k filename(-k表示保留原文件)
+解压缩：xz -d filename.xz
+
+
+使用打包+压缩解压缩进行文件处理:
+一：tar格式
+
+必须的参数：（3个参数不能共存）
+-c ：创建压缩文件c代表create。
+-x ：解压缩文件
+-t ：查看压缩包里面的文件！
+辅助参数：
+-z ：用 gzip 压缩/解压缩
+-j ：用 bzip2 压缩/解压缩
+-v ：显示压缩/解压缩的进度条
+-f ：使用档名（注意：f后面不要接参数，也就是说-zxfv是不对的，要写成-zxvf）
+
+1.使用gzip打包压缩
+打包压缩：tar -zcvf filename.tar.gz filename 或者 tar -zcf filename.tar.gz filename (filename可以是压缩文件或者打包压缩文件不过没必要。)
+解压缩：tar -zxvf filename-tar.gz 或者 tar -zxf filename.tar.gz
+
+2.使用bzip2打包压缩
+打包压缩：tar -jcvf filename.tar.bz2 filename 或者 tar -jcf filename.tar.bz2 filename (filename可以是压缩文件或者打包压缩文件不过没必要。)
+解压缩：tar -jxvf filename-tar.bz2 或者 tar -jxf filename.tar.bz2
+
+说明：以上是linux常见的压缩解压缩文件或文件夹的操作。其他格式暂不做说明，例如rar(rarlinux是收费软件)，7z。
+
+
+
+
+
+
+
+
+
