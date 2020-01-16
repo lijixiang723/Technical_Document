@@ -1,0 +1,87 @@
+创建表：
+	主键约束:
+	primary key
+
+	设置主键自增:
+	auto_increment
+
+	设置默认时间为当前时间:
+	current_timestamp
+
+	字段唯一约束:
+	unique
+
+	外键约束: 
+	constraint foreign key 子表外键id references 主表(主键id)
+
+	on delete: 
+	no action == restrict:检查是否有外键，有则不允许删除
+	cascade: 检查是否有外键，有则字表中的数据也删除
+	set null: 检查是否有外键，有则设置字表中的数据为null,前提是字表该字段允许为null 
+
+	on update: 
+	no action == restrict:检查是否有外键，有则不允许更新
+	cascade: 检查是否有外键，有则字表中的数据也更新
+	set null: 检查是否有外键，有则设置字表中的数据为null,前提是字表该字段允许为null
+
+	创建一张表的例子：
+	create table test_table(
+	id int(11) not null primary key auto_increment,
+	created datetime not null default current_timestamp,
+	is_delete int(1) not null default 1,
+	name char(32) not null,
+	phone_number char(11) not null unique,
+	id_card char(18) not null unique,
+	birthday date not null,
+	teacher_id int(11) not null,
+	constraint test_fk1 foreign key(teacher_id) references teacher(id)
+	on delete cascade
+	on update cascade);
+
+修改表：
+	修改表名: alter table 表名 rename 新表名;
+	修改字段名: alter table 表名 change 旧字段名 新字段名 该字段数据类型;
+	修改字段数据类型: alter table 表名 modify 字段名 需要修改的数据类型;
+	添加字段: alter table 表名 add 添加的字段名 数据类型 约束条件 first(after 已存在字段);
+		注: first 表示添加到第一列，after表示添加到指定的字段之后，两者不能同时存在。
+	删除字段: alter table 表名 drop 字段名;
+	修改字段的排列位置: alter table 表名 modify 字段名 该字段的数据类型 first(after 已存在字段);
+	添加表唯一约束: alter table 表名 add constraint unique(需要唯一约束的字段名);
+	删除表的唯一约束: alter table 表名 drop key 约束键名; (不知道可以使用命令 show create table 该表表名查看字段的约束键名)
+	删除主键约束: alter table 表名 drop primary key;
+	添加外键约束: alter table 表名 add constraint 键名 foreign key 子表外键id references 主表(主键id) on delete cascade on 		update cascade;
+	删除外键约束: alter table 表名 drop foreign key 外键约束名
+	取消和开启外键约束: set foreign_key_checks=0; set foreign_key_checks=1;
+	清空数据表中的数据: delete from 表名; truncate 表名;
+
+数值类型: 数值类型有五种(只举前四种)：
+	  tinyint  -128-127 0-255 1个字节=8bit=8个二进制位
+	  smallint  -32768-32767 0-65535 2个字节
+	  mediumint -838608-8388607 0-16777215 3个字节
+	  int  -2147483648-2147483647 0-4294967295 4个字节
+	  注: 定义数据类型后面的数字表示的是，显示的长度，和存储值范围无关，存储值的范围是该数据类型的取值范围；
+	  sql使用整数类型默认用的是有符号整数，若要设置为无符号整数需要设置参数 unsigend。
+
+字符类型: 字符类型有八种(只举前六种)：
+	  char 固定长度的非二进制字符串  m个字节 1<=m<=255
+	  carchar 可变长度的非二进制字符串 l+1个字节 l<=m, 1<=m<=255
+	  tinytext l+1个字节 l<2^8
+	  text 可变长度的非二进制字符串 l+2个字节 l<2^16
+	  mediumtext l+3个字节 l<2^24
+	  longtext l+4个字节 l<2^32
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
